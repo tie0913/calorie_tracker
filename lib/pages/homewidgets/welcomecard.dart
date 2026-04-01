@@ -1,4 +1,5 @@
 
+import 'package:calorie_tracker/pages/homewidgets/cardwrapper.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeCard extends StatefulWidget {
@@ -28,22 +29,7 @@ class _WelcomeCardState extends State<WelcomeCard> {
 
     return GestureDetector(
       onTap: _toggle,
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: theme.cardColor,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 6,
-              color: Colors.black.withOpacity(
-                theme.brightness == Brightness.light ? 0.1 : 0.4,
-              ),
-              offset: const Offset(0, 2),
-            )
-          ],
-        ),
+      child: CardWrapper.wrap(context, 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,7 +39,7 @@ class _WelcomeCardState extends State<WelcomeCard> {
             Text(
               _expanded
                   ? "You’re doing great today 💪"
-                  : "Track your nutrition",
+                  : "Track your nutrition all right",
               style: theme.textTheme.bodySmall,
             ),
           ],

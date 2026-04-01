@@ -1,3 +1,4 @@
+import 'package:calorie_tracker/pages/homewidgets/dailycaloriecard.dart';
 import 'package:calorie_tracker/pages/homewidgets/foodlog.dart';
 import 'package:calorie_tracker/pages/homewidgets/welcomecard.dart';
 import 'package:flutter/material.dart';
@@ -29,9 +30,8 @@ class CalorieTrackerPage extends StatelessWidget {
         child: Column(
           children: [
             WelcomeCard(name: "Tie"),
-            //_welcomeCard(context),
             const SizedBox(height: 16),
-            _dailyCaloriesCard(context),
+            DailyCalorieCard(),
             const SizedBox(height: 16),
             _macroCard(context),
             const SizedBox(height: 16),
@@ -68,54 +68,6 @@ class CalorieTrackerPage extends StatelessWidget {
         ],
       ),
       child: child,
-    );
-  }
-
-  Widget _dailyCaloriesCard(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
-
-    return _cardWrapper(
-      context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Daily Calories", style: textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Text("1000 / 2000 kcal"),
-          const SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: 0.5,
-            minHeight: 8,
-          ),
-          const SizedBox(height: 16),
-          _infoBox(context, "Remaining", "450 kcal"),
-          const SizedBox(height: 8),
-          _infoBox(context, "Consumed", "450 kcal"),
-          const SizedBox(height: 8),
-          _infoBox(context, "Target", "2000 kcal"),
-        ],
-      ),
-    );
-  }
-
-  Widget _infoBox(BuildContext context, String title, String value) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        border: Border.all(color: theme.dividerColor),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Text(title, style: theme.textTheme.bodySmall),
-          const SizedBox(height: 4),
-          Text(value, style: theme.textTheme.bodyMedium),
-        ],
-      ),
     );
   }
 

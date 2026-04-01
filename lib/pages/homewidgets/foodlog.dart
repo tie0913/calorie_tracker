@@ -1,8 +1,7 @@
-
-
+import 'package:calorie_tracker/pages/homewidgets/cardwrapper.dart';
 import 'package:flutter/material.dart';
 
-class FoodLog extends StatefulWidget{
+class FoodLog extends StatefulWidget {
   const FoodLog({super.key});
 
   @override
@@ -10,33 +9,12 @@ class FoodLog extends StatefulWidget{
 }
 
 class _FoodlogState extends State<FoodLog> {
-
-
   @override
   Widget build(BuildContext context) {
-
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
-
-    return Container(
-
-      padding: const EdgeInsets.all(16),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 6,
-            color: Colors.black.withOpacity(
-              theme.brightness == Brightness.light ? 0.1 : 0.4,
-            ),
-            offset: const Offset(0, 2),
-          )
-        ],
-      ),
-
-
+    return CardWrapper.wrap(
+      context = context,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,9 +29,12 @@ class _FoodlogState extends State<FoodLog> {
     );
   }
 
-
   Widget _foodItem(
-      BuildContext context, String name, String time, String kcal) {
+    BuildContext context,
+    String name,
+    String time,
+    String kcal,
+  ) {
     final theme = Theme.of(context);
 
     return Container(
