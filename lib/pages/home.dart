@@ -1,3 +1,4 @@
+import 'package:calorie_tracker/pages/basicInfo.dart';
 import 'package:calorie_tracker/pages/homewidgets/dailycaloriecard.dart';
 import 'package:calorie_tracker/pages/homewidgets/foodlog.dart';
 import 'package:calorie_tracker/pages/homewidgets/welcomecard.dart';
@@ -37,7 +38,14 @@ class CalorieTrackerPage extends StatelessWidget {
             const SizedBox(height: 16),
             _addFoodButton(context),
             const SizedBox(height: 16),
-            _simpleCard(context, "Personal info"),
+            _simpleButton(context, 
+            "Personal info",
+            onTap: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const BasicInfoPage()),
+              );
+            }),
             const SizedBox(height: 16),
             _simpleCard(context, "Weight Progress"),
             const SizedBox(height: 16),
@@ -136,5 +144,22 @@ class CalorieTrackerPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _simpleButton(
+    BuildContext context,
+    String title,
+    {
+          VoidCallback? onTap,
+    }
+  ){
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: _cardWrapper(context, child: Center(
+        child: Text(title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),),
+    ),   );
   }
 }
