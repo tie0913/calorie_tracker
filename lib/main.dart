@@ -1,10 +1,21 @@
 import 'package:calorie_tracker/NoStretchScrollBehavior.dart';
+import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
 import 'package:calorie_tracker/pages/home.dart';
 import 'package:calorie_tracker/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const CalorieTrackerApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => BasicInfoProvider(),
+        )
+      ],
+      child: CalorieTrackerApp(),
+    ),
+  );
 }
 
 class CalorieTrackerApp extends StatelessWidget {

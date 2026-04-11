@@ -1,3 +1,4 @@
+import 'package:calorie_tracker/pages/addfood.dart';
 import 'package:calorie_tracker/pages/basicInfo.dart';
 import 'package:calorie_tracker/pages/homewidgets/dailycaloriecard.dart';
 import 'package:calorie_tracker/pages/homewidgets/foodlog.dart';
@@ -22,7 +23,7 @@ class CalorieTrackerPage extends StatelessWidget {
               "Clear All Data",
               style: TextStyle(color: theme.colorScheme.onSurface),
             ),
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -30,7 +31,7 @@ class CalorieTrackerPage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            WelcomeCard(name: "Tie"),
+            WelcomeCard(),
             const SizedBox(height: 16),
             DailyCalorieCard(),
             const SizedBox(height: 16),
@@ -38,18 +39,22 @@ class CalorieTrackerPage extends StatelessWidget {
             const SizedBox(height: 16),
             _addFoodButton(context),
             const SizedBox(height: 16),
-            _simpleButton(context, 
-            "Personal info",
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const BasicInfoPage()),
-              );
-            }),
+            _simpleButton(
+              context,
+              "Personal info",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const BasicInfoPage(),
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 16),
             _simpleCard(context, "Weight Progress"),
             const SizedBox(height: 16),
-            FoodLog()
+            FoodLog(),
           ],
         ),
       ),
@@ -72,7 +77,7 @@ class CalorieTrackerPage extends StatelessWidget {
               theme.brightness == Brightness.light ? 0.1 : 0.4,
             ),
             offset: const Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: child,
@@ -109,17 +114,11 @@ class CalorieTrackerPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(name),
-            Text(
-              "1000 / 2000 kcal",
-              style: theme.textTheme.bodySmall,
-            ),
+            Text("1000 / 2000 kcal", style: theme.textTheme.bodySmall),
           ],
         ),
         const SizedBox(height: 6),
-        LinearProgressIndicator(
-          value: progress,
-          minHeight: 6,
-        ),
+        LinearProgressIndicator(value: progress, minHeight: 6),
       ],
     );
   }
@@ -128,7 +127,12 @@ class CalorieTrackerPage extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddFoodPage()),
+          );
+        },
         child: const Text("+ Add Food", style: TextStyle(fontSize: 16)),
       ),
     );
@@ -138,28 +142,25 @@ class CalorieTrackerPage extends StatelessWidget {
     return _cardWrapper(
       context,
       child: Center(
-        child: Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        child: Text(title, style: Theme.of(context).textTheme.titleMedium),
       ),
     );
   }
 
   Widget _simpleButton(
     BuildContext context,
-    String title,
-    {
-          VoidCallback? onTap,
-    }
-  ){
+    String title, {
+    VoidCallback? onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
-      child: _cardWrapper(context, child: Center(
-        child: Text(title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),),
-    ),   );
+      child: _cardWrapper(
+        context,
+        child: Center(
+          child: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        ),
+      ),
+    );
   }
 }

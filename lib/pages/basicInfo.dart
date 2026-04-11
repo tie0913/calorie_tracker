@@ -14,9 +14,6 @@ class BasicInfoPage extends StatefulWidget {
 
 class _BasicInfoPageState extends State<BasicInfoPage>{
   bool _isEditMode = false;
-
-
-
   String _name = "Tie";
   int _age = 25;
   double _height = 170.0; // Default height in cm
@@ -116,7 +113,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+
 
     return Scaffold(
       appBar: AppBar(
@@ -133,7 +130,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            WelcomeCard(name: "Tie"),
+            WelcomeCard(),
             const SizedBox(height: 24),
             CardWrapper.wrap(context, 
               child: Column(
