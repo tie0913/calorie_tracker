@@ -2,6 +2,7 @@ import 'package:calorie_tracker/pages/addfood.dart';
 import 'package:calorie_tracker/pages/basicInfo.dart';
 import 'package:calorie_tracker/pages/homewidgets/dailycaloriecard.dart';
 import 'package:calorie_tracker/pages/homewidgets/foodlog.dart';
+import 'package:calorie_tracker/pages/homewidgets/micronutri.dart';
 import 'package:calorie_tracker/pages/homewidgets/welcomecard.dart';
 import 'package:flutter/material.dart';
 
@@ -35,7 +36,7 @@ class CalorieTrackerPage extends StatelessWidget {
             const SizedBox(height: 16),
             DailyCalorieCard(),
             const SizedBox(height: 16),
-            _macroCard(context),
+            MicroNutriWidget(),
             const SizedBox(height: 16),
             _addFoodButton(context),
             const SizedBox(height: 16),
@@ -81,45 +82,6 @@ class CalorieTrackerPage extends StatelessWidget {
         ],
       ),
       child: child,
-    );
-  }
-
-  Widget _macroCard(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return _cardWrapper(
-      context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(child: Text("Macro-nutrients", style: textTheme.titleMedium)),
-          const SizedBox(height: 16),
-          _macroItem(context, "Protein", 0.5),
-          const SizedBox(height: 8),
-          _macroItem(context, "Carbs", 0.5),
-          const SizedBox(height: 8),
-          _macroItem(context, "Fats", 0.5),
-        ],
-      ),
-    );
-  }
-
-  Widget _macroItem(BuildContext context, String name, double progress) {
-    final theme = Theme.of(context);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(name),
-            Text("1000 / 2000 kcal", style: theme.textTheme.bodySmall),
-          ],
-        ),
-        const SizedBox(height: 6),
-        LinearProgressIndicator(value: progress, minHeight: 6),
-      ],
     );
   }
 
