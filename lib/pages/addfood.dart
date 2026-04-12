@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'package:calorie_tracker/dto/foodlog.dart';
+import 'package:calorie_tracker/notifications/foodprovider.dart';
 import 'package:calorie_tracker/util/usdaapi.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddFoodPage extends StatefulWidget {
   const AddFoodPage({super.key});
@@ -53,17 +56,17 @@ class _AddFoodPageState extends State<AddFoodPage> {
     final factor = weight / 100;
 
     setState(() {
-      _proteinController.text =
-          ((_cachedFood!['protein'] ?? 0) * factor).toStringAsFixed(1);
+      _proteinController.text = ((_cachedFood!['protein'] ?? 0) * factor)
+          .toStringAsFixed(1);
 
-      _calorieController.text =
-          ((_cachedFood!['calories'] ?? 0) * factor).toStringAsFixed(0);
+      _calorieController.text = ((_cachedFood!['calories'] ?? 0) * factor)
+          .toStringAsFixed(0);
 
-      _fatsController.text =
-          ((_cachedFood!['fat'] ?? 0) * factor).toStringAsFixed(1);
+      _fatsController.text = ((_cachedFood!['fat'] ?? 0) * factor)
+          .toStringAsFixed(1);
 
-      _carbsController.text =
-          ((_cachedFood!['carbs'] ?? 0) * factor).toStringAsFixed(1);
+      _carbsController.text = ((_cachedFood!['carbs'] ?? 0) * factor)
+          .toStringAsFixed(1);
     });
   }
 
@@ -85,10 +88,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
     _recalculate();
   }
 
-  // ===============================
-  // 提交
-  // ===============================
-  void _submit() {
+  Future<void> _save() async {
     final name = _nameController.text;
     final serving = double.tryParse(_servingController.text) ?? 0;
     final calorie = double.tryParse(_calorieController.text) ?? 0;
@@ -96,11 +96,53 @@ class _AddFoodPageState extends State<AddFoodPage> {
     final carbs = double.tryParse(_carbsController.text) ?? 0;
     final fats = double.tryParse(_fatsController.text) ?? 0;
 
-    print("Food: $name");
-    print("Serving: $serving");
-    print("Calories: $calorie");
+    if (name.isEmpty || serving == 0) {
+      return;
+    } else {
+      final foodLog = FoodLog(
+        name: name,
+        serveSize: serving,
+        calorie: calorie,
+        carbs: carbs,
+        protein: protein,
+        fats: fats,
+        logTime: DateTime.now(),
+      );
+      await context.read<FoodProvider>().append(foodLog);
+    }
+  }
 
-    // 👉 下一步：存数据库 + Provider
+  void _clear() {
+    // 1️⃣ 清空输入框
+    _nameController.clear();
+    _servingController.clear();
+    _calorieController.clear();
+    _proteinController.clear();
+    _carbsController.clear();
+    _fatsController.clear();
+
+    // 2️⃣ 清空缓存数据（非常关键）
+    _cachedFood = null;
+    _lastFoodName = "";
+
+    // 3️⃣ 取消防抖（避免误触发 API）
+    _debounce?.cancel();
+
+    // 4️⃣ 刷新 UI（可选但建议）
+    setState(() {});
+  }
+
+  // ===============================
+  // 提交
+  // ===============================
+  void _saveAndClose() async {
+    await _save();
+    Navigator.pop(context);
+  }
+
+  void _saveAndNew() async {
+    await _save();
+    _clear();
   }
 
   @override
@@ -178,19 +220,26 @@ class _AddFoodPageState extends State<AddFoodPage> {
 
             Row(
               children: [
-                Expanded(
+                Flexible(
                   child: ElevatedButton(
-                    onPressed: _submit,
-                    child: const Text("Add to Food Log"),
+                    onPressed: _saveAndClose,
+                    child: const Text("Save & Close", softWrap: false,),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 2),
+                Flexible(
+                  child: ElevatedButton(
+                    onPressed: _saveAndNew,
+                    child: const Text("Save & New", softWrap: false,),
+                  ),
+                ),
+                const SizedBox(width: 2),
                 OutlinedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
+                  child: const Text("Cancel", softWrap: false,),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -218,9 +267,7 @@ class _AddFoodPageState extends State<AddFoodPage> {
           enabled: enabled,
           onChanged: onChanged,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
               vertical: 14,

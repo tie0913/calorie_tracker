@@ -1,5 +1,6 @@
 import 'package:calorie_tracker/NoStretchScrollBehavior.dart';
 import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
+import 'package:calorie_tracker/notifications/foodprovider.dart';
 import 'package:calorie_tracker/pages/home.dart';
 import 'package:calorie_tracker/theme.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ void main() {
       providers: [
         ChangeNotifierProvider(
           create: (_) => BasicInfoProvider(),
-        )
+        ),
+        ChangeNotifierProvider(create: (_) => FoodProvider())
       ],
       child: CalorieTrackerApp(),
     ),

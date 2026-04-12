@@ -1,18 +1,67 @@
+import 'package:calorie_tracker/notifications/foodprovider.dart';
 import 'package:calorie_tracker/pages/homewidgets/cardwrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class FoodLog extends StatefulWidget {
-  const FoodLog({super.key});
+class FoodLogWidget extends StatefulWidget {
+  const FoodLogWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => _FoodlogState();
 }
 
-class _FoodlogState extends State<FoodLog> {
+class _FoodlogState extends State<FoodLogWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
+
+    return Consumer<FoodProvider>(
+      builder: (BuildContext context, FoodProvider provider, Widget? child) {
+        final list = provider.list;
+
+        List<Widget> widgets = [
+          Text("Today’s Food Log", style: textTheme.titleMedium),
+          const SizedBox(height: 12),
+        ];
+        if (list.isNotEmpty) {
+          final it = list.iterator;
+          while (it.moveNext()) {
+            final log = it.current;
+            widgets.add(
+              _foodItem(
+                context,
+                log.name,
+                DateFormat('hh:mm a').format(log.logTime),
+                "${log.calorie} kcal",
+              ),
+            );
+          }
+        } else {
+          widgets.add(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Center(
+                child: Text(
+                  "No food logged yet",
+                  style: textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return CardWrapper.wrap(
+          context = context,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: widgets,
+          ),
+        );
+      },
+    );
+    /*
     return CardWrapper.wrap(
       context = context,
       child: Column(
@@ -26,7 +75,7 @@ class _FoodlogState extends State<FoodLog> {
           _foodItem(context, "Steak", "5:00 PM", "400 kcal"),
         ],
       ),
-    );
+    );*/
   }
 
   Widget _foodItem(

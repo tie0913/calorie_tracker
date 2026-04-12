@@ -1,4 +1,5 @@
 import 'package:calorie_tracker/dto/basic_info.dart';
+import 'package:calorie_tracker/dto/foodlog.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -81,38 +82,33 @@ class DatabaseHelper {
     }
   }
 
-  // ===========================
-  // CRUD 操作
-  // ===========================
-
-  /// 插入或替换食物
-  Future<void> insertFood(String name, double calories) async {
+  Future<void> appendFoodLog(FoodLog foodLog) async {
     final db = await instance.database;
-
-    await db.insert('food', {
-      'name': name,
-      'calories': calories,
-    }, conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      'food_log',
+      foodLog.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
-  /// 查询食物
-  Future<Map<String, dynamic>?> getFood(String name) async {
-    final db = await instance.database;
+  Future<List<FoodLog>> getTodayLogs() async {
+    final db = await DatabaseHelper.instance.database;
 
-    final result = await db.query('food', where: 'name = ?', whereArgs: [name]);
+    final now = DateTime.now();
+    final startOfDay = DateTime(now.year, now.month, now.day);
+    final startOfNextDay = startOfDay.add(const Duration(days: 1));
 
-    if (result.isNotEmpty) {
-      return result.first;
-    } else {
-      return null;
-    }
-  }
+    final result = await db.query(
+      'food_log',
+      where: 'log_time >= ? AND log_time < ?',
+      whereArgs: [
+        startOfDay.toIso8601String(),
+        startOfNextDay.toIso8601String(),
+      ],
+      orderBy: 'log_time DESC', // 👈 倒排
+    );
 
-  /// 删除（可选）
-  Future<void> deleteFood(String name) async {
-    final db = await instance.database;
-
-    await db.delete('food', where: 'name = ?', whereArgs: [name]);
+    return result.map((e) => FoodLog.fromMap(e)).toList();
   }
 
   /// 关闭数据库（一般不用主动调）

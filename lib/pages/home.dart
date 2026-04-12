@@ -54,7 +54,7 @@ class CalorieTrackerPage extends StatelessWidget {
             const SizedBox(height: 16),
             _simpleCard(context, "Weight Progress"),
             const SizedBox(height: 16),
-            FoodLog(),
+            FoodLogWidget(),
           ],
         ),
       ),
