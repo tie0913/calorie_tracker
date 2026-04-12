@@ -1,5 +1,6 @@
 import 'package:calorie_tracker/dto/basic_info.dart';
 import 'package:calorie_tracker/dto/foodlog.dart';
+import 'package:calorie_tracker/dto/weightlog.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -55,6 +56,23 @@ class DatabaseHelper {
       );
     ''');
     await db.execute('''
+      INSERT INTO basic_info (
+        name,
+        age,
+        height,
+        weight,
+        daily_calorie,
+        log_time
+      ) VALUES (
+        'Tie',
+        25,
+        175,
+        75,
+        2500,
+        '2026-04-12T10:30:00'
+      );
+    ''');
+    await db.execute('''
       CREATE TABLE food_log (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
@@ -68,7 +86,29 @@ class DatabaseHelper {
     ''');
   }
 
+  /*
+   * save the basic info to the table
+   * Nguyen will do this.
+   */
   Future<void> saveBasicInfo(BasicInfo basicInfo) async {}
+
+  Future<List<WeightLog>> getAllWeights() async {
+    final db = await DatabaseHelper.instance.database;
+
+    final result = await db.query(
+      'basic_info',
+      columns: ['weight', 'log_time'],
+      where: 'weight IS NOT NULL',
+      orderBy: 'log_time ASC',
+    );
+
+    return result.map((e) {
+      return WeightLog(
+        weight: (e['weight'] as num).toDouble(),
+        date: DateTime.parse(e['log_time'] as String),
+      );
+    }).toList();
+  }
 
   Future<Map<String, dynamic>?> getLatestBasicInfo() async {
     final db = await instance.database;

@@ -19,8 +19,6 @@ class MicroNutriWidget extends StatelessWidget {
 
             double totalTarget = basic?.dailyCalorie ?? 0;
 
-            double totalConsumed = 0;
-
             double proteinConsumed = 0;
             double carbsConsumed = 0;
             double fatsConsumed = 0;
@@ -33,7 +31,6 @@ class MicroNutriWidget extends StatelessWidget {
               final it = list.iterator;
               while (it.moveNext()) {
                 final cur = it.current;
-                totalConsumed += cur.calorie ?? 0;
                 proteinConsumed += cur.protein ?? 0;
                 carbsConsumed += cur.carbs ?? 0;
                 fatsConsumed += cur.fats ?? 0;

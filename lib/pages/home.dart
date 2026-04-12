@@ -2,6 +2,7 @@ import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
 import 'package:calorie_tracker/notifications/foodprovider.dart';
 import 'package:calorie_tracker/pages/addfood.dart';
 import 'package:calorie_tracker/pages/basicInfo.dart';
+import 'package:calorie_tracker/pages/chart.dart';
 import 'package:calorie_tracker/pages/homewidgets/dailycaloriecard.dart';
 import 'package:calorie_tracker/pages/homewidgets/foodlog.dart';
 import 'package:calorie_tracker/pages/homewidgets/micronutri.dart';
@@ -23,8 +24,10 @@ class CalorieTrackerPage extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              await context.read<BasicInfoProvider>().clear();
-              await context.read<FoodProvider>().clear();
+              final basicProvider = context.read<BasicInfoProvider>();
+              final foodProvider = context.read<FoodProvider>();
+              await basicProvider.clear();
+              await foodProvider.clear();
             },
             child: Text(
               "Clear All Data",
@@ -58,8 +61,20 @@ class CalorieTrackerPage extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 16),
-            _simpleCard(context, "Weight Progress"),
+            const SizedBox(height: 16), 
+            _simpleButton(
+              context,
+              "Weight Progress",
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WeightChartPage(),
+                  ),
+                );
+              },
+            ),
+            //_simpleCard(context, "Weight Progress"),
             const SizedBox(height: 16),
             FoodLogWidget(),
           ],

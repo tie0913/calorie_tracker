@@ -1,20 +1,30 @@
 import 'package:calorie_tracker/db/database.dart';
 import 'package:calorie_tracker/dto/basic_info.dart';
+import 'package:calorie_tracker/dto/weightlog.dart';
 import 'package:flutter/material.dart';
 
 class BasicInfoProvider extends ChangeNotifier {
   BasicInfo? _info;
 
+  List<WeightLog> _weightList = [];
+
   BasicInfo? get info => _info;
+
+  List<WeightLog> get weightList => _weightList;
 
   BasicInfoProvider() {
     loadFromDb(); // 启动时自动执行
   }
 
-  void setBasicInfo(BasicInfo newInfo) {
+  Future<void> setBasicInfo(BasicInfo newInfo) async {
     _info = newInfo;
-    // TODO insert basic info to database
-    notifyListeners(); //通知UI更新
+
+    final db = DatabaseHelper.instance;
+    // TODO Nguyen will insert basic info to database
+
+    _weightList.clear();
+    _weightList.addAll(await db.getAllWeights());
+    notifyListeners();
   }
 
   Future<void> clear() async {
@@ -31,6 +41,11 @@ class BasicInfoProvider extends ChangeNotifier {
 
     if (result != null) {
       _info = BasicInfo.fromMap(result);
+    }
+
+    final weightList = await db.getAllWeights();
+    if (weightList.isNotEmpty) {
+      _weightList.addAll(weightList);
     }
 
     notifyListeners();
