@@ -13,19 +13,26 @@ class BasicInfoProvider extends ChangeNotifier {
 
   void setBasicInfo(BasicInfo newInfo) {
     _info = newInfo;
+    // TODO insert basic info to database
     notifyListeners(); //通知UI更新
+  }
+
+  Future<void> clear() async {
+    final db = DatabaseHelper.instance;
+    await db.clearBasicInfo();
+    _info = null;
+    notifyListeners();
   }
 
   Future<void> loadFromDb() async {
     final db = DatabaseHelper.instance;
 
     final result = await db.getLatestBasicInfo();
-    
-    if(result != null){
+
+    if (result != null) {
       _info = BasicInfo.fromMap(result);
     }
 
     notifyListeners();
   }
-
 }

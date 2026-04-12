@@ -21,7 +21,7 @@ class DatabaseHelper {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+    return await openDatabase(path, version: 2, onCreate: _createDB);
   }
 
   /// 创建表（只执行一次）
@@ -115,5 +115,15 @@ class DatabaseHelper {
   Future close() async {
     final db = await instance.database;
     db.close();
+  }
+
+  Future<void> clearBasicInfo() async {
+    final db = await instance.database;
+    await db.delete("basic_info");
+  }
+
+  Future<void> clearFoodLog() async {
+    final db = await instance.database;
+    await db.delete("food_log");
   }
 }

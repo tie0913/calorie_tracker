@@ -24,4 +24,11 @@ class FoodProvider extends ChangeNotifier {
     _list.addAll(result);
     notifyListeners();
   }
+
+  Future<void> clear() async {
+    final db = DatabaseHelper.instance;
+    await db.clearFoodLog();
+    _list.clear();
+    notifyListeners();
+  }
 }

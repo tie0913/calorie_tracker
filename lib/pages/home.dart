@@ -1,3 +1,5 @@
+import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
+import 'package:calorie_tracker/notifications/foodprovider.dart';
 import 'package:calorie_tracker/pages/addfood.dart';
 import 'package:calorie_tracker/pages/basicInfo.dart';
 import 'package:calorie_tracker/pages/homewidgets/dailycaloriecard.dart';
@@ -5,6 +7,7 @@ import 'package:calorie_tracker/pages/homewidgets/foodlog.dart';
 import 'package:calorie_tracker/pages/homewidgets/micronutri.dart';
 import 'package:calorie_tracker/pages/homewidgets/welcomecard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CalorieTrackerPage extends StatelessWidget {
   const CalorieTrackerPage({super.key});
@@ -19,7 +22,10 @@ class CalorieTrackerPage extends StatelessWidget {
         title: const Text("Calorie Tracker"),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              await context.read<BasicInfoProvider>().clear();
+              await context.read<FoodProvider>().clear();
+            },
             child: Text(
               "Clear All Data",
               style: TextStyle(color: theme.colorScheme.onSurface),
