@@ -7,6 +7,7 @@ import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
 import 'package:provider/provider.dart';
 
 enum HeightUnit { cm, ft }
+
 enum WeightUnit { kg, lb }
 
 class BasicInfoPage extends StatefulWidget {
@@ -16,7 +17,9 @@ class BasicInfoPage extends StatefulWidget {
   State<BasicInfoPage> createState() => _BasicInfoPageState();
 }
 
-class _BasicInfoPageState extends State<BasicInfoPage>{
+class _BasicInfoPageState extends State<BasicInfoPage> {
+  BasicInfo? _info;
+
   bool _isEditMode = false;
   String _name = "Tie";
   int _age = 25;
@@ -40,53 +43,53 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
     _weightController = TextEditingController(text: _weight.toString());
   }
 
-  String get _displayHeight{
-    if (_heightUnit == HeightUnit.cm){
+  String get _displayHeight {
+    if (_heightUnit == HeightUnit.cm) {
       return _height.toStringAsFixed(0);
     }
     return (_height / 30.48).toStringAsFixed(2); // Convert to feet
-
   }
-  String get _displayWeight{
-    if (_weightUnit == WeightUnit.kg){
+
+  String get _displayWeight {
+    if (_weightUnit == WeightUnit.kg) {
       return _weight.toStringAsFixed(0);
     }
     return (_weight * 2.20462).toStringAsFixed(1); // Convert to pounds
   }
 
   void _toggleEditMode() async {
-  if (_isEditMode) {
-    final heightValue = double.tryParse(_heightController.text);
-    final weightValue = double.tryParse(_weightController.text);
-    final ageValue = int.tryParse(_ageController.text);
+    if (_isEditMode) {
+      final heightValue = double.tryParse(_heightController.text);
+      final weightValue = double.tryParse(_weightController.text);
+      final ageValue = int.tryParse(_ageController.text);
 
-    _name = _nameController.text;
+      _name = _nameController.text;
 
-    if (ageValue != null) {
-      _age = ageValue;
+      if (ageValue != null) {
+        _age = ageValue;
+      }
+
+      if (heightValue != null) {
+        _height = _heightUnit == HeightUnit.cm
+            ? heightValue
+            : heightValue * 30.48;
+      }
+
+      if (weightValue != null) {
+        _weight = _weightUnit == WeightUnit.kg
+            ? weightValue
+            : weightValue / 2.20462;
+      }
+
+      final newInfo = BasicInfo(
+        name: _name,
+        age: _age,
+        height: _height,
+        weight: _weight,
+        logTime: DateTime.now().toIso8601String(),
+      );
+      await context.read<BasicInfoProvider>().setBasicInfo(newInfo);
     }
-
-    if (heightValue != null) {
-      _height = _heightUnit == HeightUnit.cm
-          ? heightValue
-          : heightValue * 30.48;
-    }
-
-    if (weightValue != null) {
-      _weight = _weightUnit == WeightUnit.kg
-          ? weightValue
-          : weightValue / 2.20462;
-    }
-
-    final newInfo = BasicInfo(
-      name: _name,
-      age: _age,
-      height: _height,
-      weight: _weight,
-      logTime: DateTime.now().toIso8601String(),
-    );
-    await context.read<BasicInfoProvider>().setBasicInfo(newInfo);
-  }
 
     setState(() {
       _isEditMode = !_isEditMode;
@@ -97,8 +100,8 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
     });
   }
 
-  void _changeHeightUnit(HeightUnit? unit){
-    if (unit != null){
+  void _changeHeightUnit(HeightUnit? unit) {
+    if (unit != null) {
       setState(() {
         _heightUnit = unit;
         _heightController.text = _displayHeight;
@@ -106,8 +109,8 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
     }
   }
 
-  void _changeWeightUnit(WeightUnit? unit){
-    if (unit != null){
+  void _changeWeightUnit(WeightUnit? unit) {
+    if (unit != null) {
       setState(() {
         _weightUnit = unit;
         _weightController.text = _displayWeight;
@@ -126,13 +129,24 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
 
   @override
   Widget build(BuildContext context) {
+    bool _initialize = false;
     final basicInfo = context.watch<BasicInfoProvider>().info;
-
-    if (basicInfo != null && !_isEditMode) {
+    if (basicInfo == null) {
+      debugPrint('basicInfo is NULL');
+    } else {
+      debugPrint('basicInfo loaded:');
+      debugPrint('Name: ${basicInfo.name}');
+      debugPrint('Age: ${basicInfo.age}');
+      debugPrint('Height: ${basicInfo.height}');
+      debugPrint('Weight: ${basicInfo.weight}');
+      debugPrint('LogTime: ${basicInfo.logTime}');
+    }
+    if (basicInfo != null && !_initialize) {
       _nameController.text = basicInfo.name;
       _ageController.text = basicInfo.age?.toString() ?? '';
       _heightController.text = basicInfo.height?.toString() ?? '';
       _weightController.text = basicInfo.weight?.toString() ?? '';
+      bool _initialize = true;
     }
 
     return Scaffold(
@@ -142,7 +156,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
           IconButton(
             icon: Icon(_isEditMode ? Icons.check : Icons.edit),
             onPressed: _toggleEditMode,
-          )
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -152,13 +166,18 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
           children: [
             WelcomeCard(),
             const SizedBox(height: 24),
-            CardWrapper.wrap(context, 
+            CardWrapper.wrap(
+              context,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildField("Name", _nameController),
                   const SizedBox(height: 16),
-                  _buildField("Age", _ageController, keyboardType: TextInputType.number),
+                  _buildField(
+                    "Age",
+                    _ageController,
+                    keyboardType: TextInputType.number,
+                  ),
                   const SizedBox(height: 16),
                   _buildUnitField(
                     label: "Height",
@@ -170,16 +189,17 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
                     label: "Weight",
                     controller: _weightController,
                     leftText: "kg",
-                  ),]
-                ,)
-              )
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-    Widget _buildField(
+  Widget _buildField(
     String label,
     TextEditingController controller, {
     TextInputType keyboardType = TextInputType.text,
@@ -194,9 +214,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
           enabled: _isEditMode,
           keyboardType: keyboardType,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
               vertical: 14,
@@ -229,7 +247,9 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
               child: TextField(
                 controller: controller,
                 enabled: _isEditMode,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -242,32 +262,20 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
               ),
             ),
             const SizedBox(width: 8),
-            if(hasToggle) ...[
-            _buildToggleButton(
-              leftText,
-              leftSelected,
-              onLeftTap ?? () {},
-            ),
-            const SizedBox(width: 4),
-            _buildToggleButton(
-              rightText,
-              !leftSelected,
-              onRightTap,
-            ),
+            if (hasToggle) ...[
+              _buildToggleButton(leftText, leftSelected, onLeftTap ?? () {}),
+              const SizedBox(width: 4),
+              _buildToggleButton(rightText, !leftSelected, onRightTap),
             ] else ...[
               _buildToggleButton(leftText, leftSelected, onLeftTap ?? () {}),
-            ]
+            ],
           ],
         ),
       ],
     );
   }
 
-  Widget _buildToggleButton(
-    String text,
-    bool selected,
-    VoidCallback onTap,
-  ) {
+  Widget _buildToggleButton(String text, bool selected, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
