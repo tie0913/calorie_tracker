@@ -65,14 +65,18 @@ class CalorieTrackerPage extends StatelessWidget {
             _simpleButton(
               context,
               "Weight Progress",
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const WeightChartPage(),
-                  ),
-                );
-              },
+              onTap: () => _requireInfoThenGo(context, const WeightChartPage()),
+              // context,
+              // "Weight Progress",
+              // onTap: () {
+
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => const WeightChartPage(),
+              //     ),
+              //   );
+              // },
             ),
             //_simpleCard(context, "Weight Progress"),
             const SizedBox(height: 16),
@@ -83,6 +87,41 @@ class CalorieTrackerPage extends StatelessWidget {
     );
   }
 
+void _requireInfoThenGo(BuildContext context, Widget page) {
+  final provider = context.read<BasicInfoProvider>();
+  if (!provider.hasUserSetInfo) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Personal Info Required"),
+        content: const Text(
+          "Please add your personal information before using this feature.",
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const BasicInfoPage(),
+                ),
+              );
+            },
+            child: const Text("Add Info"),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
+  Navigator.push(context, MaterialPageRoute(builder: (_) => page));
+  
+}
   Widget _cardWrapper(BuildContext context, {required Widget child}) {
     final theme = Theme.of(context);
 
@@ -107,19 +146,31 @@ class CalorieTrackerPage extends StatelessWidget {
   }
 
   Widget _addFoodButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddFoodPage()),
-          );
-        },
-        child: const Text("+ Add Food", style: TextStyle(fontSize: 16)),
-      ),
-    );
-  }
+      return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: () => _requireInfoThenGo(context, const AddFoodPage()),
+      child: const Text("+ Add Food", style: TextStyle(fontSize: 16)),
+    ),
+  );
+}
+      
+  //   return SizedBox(
+  //     width: double.infinity,
+  //     child: ElevatedButton(
+  //       onPressed: () { 
+
+  //         context.read<BasicInfoProvider>().info;
+
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(builder: (context) => const AddFoodPage()),
+  //         );
+  //       },
+  //       child: const Text("+ Add Food", style: TextStyle(fontSize: 16)),
+  //     ),
+  //   );
+  // }
 
   Widget _simpleCard(BuildContext context, String title) {
     return _cardWrapper(

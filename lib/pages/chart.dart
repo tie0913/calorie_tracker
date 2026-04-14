@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 
 import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,10 @@
+import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
 import 'package:calorie_tracker/pages/homewidgets/cardwrapper.dart';
 import 'package:calorie_tracker/pages/homewidgets/welcomecard.dart';
 import 'package:flutter/material.dart';
+import 'package:calorie_tracker/dto/basic_info.dart';
+import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
+import 'package:provider/provider.dart';
 
 enum HeightUnit { cm, ft }
 enum WeightUnit { kg, lb }
@@ -50,7 +54,7 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
     return (_weight * 2.20462).toStringAsFixed(1); // Convert to pounds
   }
 
-  void _toggleEditMode(){
+  void _toggleEditMode() async {
   if (_isEditMode) {
     final heightValue = double.tryParse(_heightController.text);
     final weightValue = double.tryParse(_weightController.text);
@@ -73,6 +77,15 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
           ? weightValue
           : weightValue / 2.20462;
     }
+
+    final newInfo = BasicInfo(
+      name: _name,
+      age: _age,
+      height: _height,
+      weight: _weight,
+      logTime: DateTime.now().toIso8601String(),
+    );
+    await context.read<BasicInfoProvider>().setBasicInfo(newInfo);
   }
 
     setState(() {

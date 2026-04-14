@@ -90,7 +90,12 @@ class DatabaseHelper {
    * save the basic info to the table
    * Nguyen will do this.
    */
-  Future<void> saveBasicInfo(BasicInfo basicInfo) async {}
+  Future<void> saveBasicInfo(BasicInfo basicInfo) async {
+    final db = await instance.database;
+    await db.insert('basic_info', basicInfo.toMap(),
+    conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 
   Future<List<WeightLog>> getAllWeights() async {
     final db = await DatabaseHelper.instance.database;

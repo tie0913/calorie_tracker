@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 class BasicInfoProvider extends ChangeNotifier {
   BasicInfo? _info;
+  bool _hasUserSetInfo = false;
 
-  List<WeightLog> _weightList = [];
+  final List<WeightLog> _weightList = [];
 
   BasicInfo? get info => _info;
+  bool get hasUserSetInfo => _hasUserSetInfo;
 
   List<WeightLog> get weightList => _weightList;
 
@@ -18,9 +20,10 @@ class BasicInfoProvider extends ChangeNotifier {
 
   Future<void> setBasicInfo(BasicInfo newInfo) async {
     _info = newInfo;
+    _hasUserSetInfo = true;
 
     final db = DatabaseHelper.instance;
-    // TODO Nguyen will insert basic info to database
+    await db.saveBasicInfo(newInfo);
 
     _weightList.clear();
     _weightList.addAll(await db.getAllWeights());
@@ -31,6 +34,7 @@ class BasicInfoProvider extends ChangeNotifier {
     final db = DatabaseHelper.instance;
     await db.clearBasicInfo();
     _info = null;
+    _hasUserSetInfo = false;
     notifyListeners();
   }
 
