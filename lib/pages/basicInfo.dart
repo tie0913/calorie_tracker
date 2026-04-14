@@ -126,7 +126,14 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
 
   @override
   Widget build(BuildContext context) {
+    final basicInfo = context.watch<BasicInfoProvider>().info;
 
+    if (basicInfo != null && !_isEditMode) {
+      _nameController.text = basicInfo.name;
+      _ageController.text = basicInfo.age?.toString() ?? '';
+      _heightController.text = basicInfo.height?.toString() ?? '';
+      _weightController.text = basicInfo.weight?.toString() ?? '';
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -157,20 +164,12 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
                     label: "Height",
                     controller: _heightController,
                     leftText: "cm",
-                    rightText: "ft",
-                    leftSelected: _heightUnit == HeightUnit.cm,
-                    onLeftTap: () => _changeHeightUnit(HeightUnit.cm),
-                    onRightTap: () => _changeHeightUnit(HeightUnit.ft),
                   ),
                   const SizedBox(height: 16),
                   _buildUnitField(
                     label: "Weight",
                     controller: _weightController,
                     leftText: "kg",
-                    rightText: "lb",
-                    leftSelected: _weightUnit == WeightUnit.kg,
-                    onLeftTap: () => _changeWeightUnit(WeightUnit.kg),
-                    onRightTap: () => _changeWeightUnit(WeightUnit.lb),
                   ),]
                 ,)
               )
@@ -212,11 +211,13 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
     required String label,
     required TextEditingController controller,
     required String leftText,
-    required String rightText,
-    required bool leftSelected,
-    required VoidCallback onLeftTap,
-    required VoidCallback onRightTap,
+    String? rightText,
+    bool leftSelected = false,
+    VoidCallback? onLeftTap,
+    VoidCallback? onRightTap,
   }) {
+    final bool hasToggle = rightText != null && onRightTap != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -241,9 +242,21 @@ class _BasicInfoPageState extends State<BasicInfoPage>{
               ),
             ),
             const SizedBox(width: 8),
-            _buildToggleButton(leftText, leftSelected, onLeftTap),
+            if(hasToggle) ...[
+            _buildToggleButton(
+              leftText,
+              leftSelected,
+              onLeftTap ?? () {},
+            ),
             const SizedBox(width: 4),
-            _buildToggleButton(rightText, !leftSelected, onRightTap),
+            _buildToggleButton(
+              rightText,
+              !leftSelected,
+              onRightTap,
+            ),
+            ] else ...[
+              _buildToggleButton(leftText, leftSelected, onLeftTap ?? () {}),
+            ]
           ],
         ),
       ],
