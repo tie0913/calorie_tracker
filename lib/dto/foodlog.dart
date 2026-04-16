@@ -19,7 +19,6 @@ class FoodLog {
     required this.logTime,
   });
 
-  /// 👉 从 SQLite Map 转对象
   factory FoodLog.fromMap(Map<String, dynamic> map) {
     return FoodLog(
       id: map['id'],
@@ -33,7 +32,6 @@ class FoodLog {
     );
   }
 
-  /// 👉 转成 Map（用于插入数据库）
   Map<String, dynamic> toMap() {
     return {
       'id': id,

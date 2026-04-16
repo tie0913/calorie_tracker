@@ -7,6 +7,6 @@ class NoStretchScrollBehavior extends ScrollBehavior {
     Widget child,
     ScrollableDetails details,
   ) {
-    return child; // 关键：直接返回 child → 禁用拉伸/光晕
+    return child; 
   }
 }

@@ -25,20 +25,17 @@ Widget build(BuildContext context) {
 
       const int windowSize = 5;
 
-      // ✅ 只取最后5个
       final start = sorted.length > windowSize
           ? sorted.length - windowSize
           : 0;
 
       final visible = sorted.sublist(start);
 
-      // ✅ 点
       final spots = List.generate(
         visible.length,
         (i) => FlSpot(i.toDouble(), visible[i].weight.toDouble()),
       );
 
-      // ✅ Y轴范围
       final weights = visible.map((e) => e.weight.toDouble()).toList();
       final minW = weights.reduce((a, b) => a < b ? a : b);
       final maxW = weights.reduce((a, b) => a > b ? a : b);
@@ -53,13 +50,13 @@ Widget build(BuildContext context) {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: cs.surface, // 👈 黑色背景
+              color: cs.surface, 
               borderRadius: BorderRadius.circular(16),
             ),
             child: LineChart(
               LineChartData(
                 minX: 0,
-                maxX: 4, // 👈 固定5个槽位
+                maxX: 4, 
 
                 minY: minY,
                 maxY: maxY,
@@ -84,7 +81,6 @@ Widget build(BuildContext context) {
                     sideTitles: SideTitles(showTitles: false),
                   ),
 
-                  // ✅ X轴
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
@@ -108,7 +104,6 @@ Widget build(BuildContext context) {
                     ),
                   ),
 
-                  // ✅ Y轴
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
@@ -132,7 +127,6 @@ Widget build(BuildContext context) {
                     curveSmoothness: 0.3,
                     barWidth: 3,
 
-                    // ✅ 用 theme 主色（不会再紫）
                     gradient: LinearGradient(
                       colors: [
                         cs.onSurface,

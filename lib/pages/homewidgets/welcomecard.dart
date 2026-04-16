@@ -40,7 +40,7 @@ class _WelcomeCardState extends State<WelcomeCard> {
                 const SizedBox(height: 8),
                 Text(
                   _expanded
-                      ? "You’re doing great today 💪"
+                      ? "You’re doing great today"
                       : "Track your nutrition all right",
                   style: theme.textTheme.bodySmall,
                 ),

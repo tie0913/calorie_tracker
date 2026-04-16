@@ -22,7 +22,7 @@ class UsdaApi {
       return null;
     }
 
-    final food = data['foods'][0]; // 👉 取第一个结果
+    final food = data['foods'][0]; 
 
     double? calories;
     double? protein;

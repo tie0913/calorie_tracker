@@ -3,7 +3,6 @@ import 'package:calorie_tracker/pages/homewidgets/cardwrapper.dart';
 import 'package:calorie_tracker/pages/homewidgets/welcomecard.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_tracker/dto/basic_info.dart';
-import 'package:calorie_tracker/notifications/basicinfoprovider.dart';
 import 'package:provider/provider.dart';
 
 enum HeightUnit { cm, ft }
@@ -18,7 +17,6 @@ class BasicInfoPage extends StatefulWidget {
 }
 
 class _BasicInfoPageState extends State<BasicInfoPage> {
-  BasicInfo? _info;
 
   bool _isEditMode = false;
   String _name = "Tie";

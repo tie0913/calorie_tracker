@@ -61,21 +61,7 @@ class _FoodlogState extends State<FoodLogWidget> {
         );
       },
     );
-    /*
-    return CardWrapper.wrap(
-      context = context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Today’s Food Log", style: textTheme.titleMedium),
-          const SizedBox(height: 12),
-          _foodItem(context, "Eggs", "9:00 AM", "300 kcal"),
-          _foodItem(context, "Chicken Salad", "12:00 PM", "450 kcal"),
-          _foodItem(context, "Protein Shake", "2:00 PM", "250 kcal"),
-          _foodItem(context, "Steak", "5:00 PM", "400 kcal"),
-        ],
-      ),
-    );*/
+
   }
 
   Widget _foodItem(

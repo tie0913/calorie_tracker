@@ -17,7 +17,6 @@ class DatabaseHelper {
     return _database!;
   }
 
-  /// 初始化数据库
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
@@ -25,7 +24,6 @@ class DatabaseHelper {
     return await openDatabase(path, version: 2, onCreate: _createDB);
   }
 
-  /// 创建表（只执行一次）
   Future<void> _createDB(Database db, int version) async {
     await db.execute('''
       CREATE TABLE basic_info (
@@ -38,6 +36,7 @@ class DatabaseHelper {
         log_time TEXT
       );
     ''');
+    /*
     await db.execute('''
       INSERT INTO basic_info (
         name,
@@ -71,7 +70,7 @@ class DatabaseHelper {
         2500,
         '2026-04-12T10:30:00'
       );
-    ''');
+    ''');*/
     await db.execute('''
       CREATE TABLE food_log (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,7 +87,6 @@ class DatabaseHelper {
 
   /*
    * save the basic info to the table
-   * Nguyen will do this.
    */
   Future<void> saveBasicInfo(BasicInfo basicInfo) async {
     final db = await instance.database;
@@ -150,13 +148,12 @@ class DatabaseHelper {
         startOfDay.toIso8601String(),
         startOfNextDay.toIso8601String(),
       ],
-      orderBy: 'log_time DESC', // 👈 倒排
+      orderBy: 'log_time DESC', 
     );
 
     return result.map((e) => FoodLog.fromMap(e)).toList();
   }
 
-  /// 关闭数据库（一般不用主动调）
   Future close() async {
     final db = await instance.database;
     db.close();

@@ -15,7 +15,7 @@ class BasicInfoProvider extends ChangeNotifier {
   List<WeightLog> get weightList => _weightList;
 
   BasicInfoProvider() {
-    loadFromDb(); // 启动时自动执行
+    loadFromDb(); 
   }
 
   Future<void> setBasicInfo(BasicInfo newInfo) async {

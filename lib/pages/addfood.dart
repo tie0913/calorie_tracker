@@ -25,9 +25,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
   Map<String, dynamic>? _cachedFood;
   String _lastFoodName = "";
 
-  // ===============================
-  // API 查询（只查一次）
-  // ===============================
   Future<void> _loadFood() async {
     final name = _nameController.text;
 
@@ -46,9 +43,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
     _recalculate();
   }
 
-  // ===============================
-  // 本地计算（重量变化触发）
-  // ===============================
   void _recalculate() {
     if (_cachedFood == null) return;
 
@@ -70,9 +64,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
     });
   }
 
-  // ===============================
-  // 输入 food → 防抖调用 API
-  // ===============================
   void _onFoodChanged(String value) {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
@@ -81,9 +72,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
     });
   }
 
-  // ===============================
-  // 修改重量 → 本地计算
-  // ===============================
   void _onServingChanged(String value) {
     _recalculate();
   }
@@ -113,7 +101,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
   }
 
   void _clear() {
-    // 1️⃣ 清空输入框
     _nameController.clear();
     _servingController.clear();
     _calorieController.clear();
@@ -121,20 +108,14 @@ class _AddFoodPageState extends State<AddFoodPage> {
     _carbsController.clear();
     _fatsController.clear();
 
-    // 2️⃣ 清空缓存数据（非常关键）
     _cachedFood = null;
     _lastFoodName = "";
 
-    // 3️⃣ 取消防抖（避免误触发 API）
     _debounce?.cancel();
 
-    // 4️⃣ 刷新 UI（可选但建议）
     setState(() {});
   }
 
-  // ===============================
-  // 提交
-  // ===============================
   void _saveAndClose() async {
     await _save();
     Navigator.pop(context);
@@ -246,9 +227,6 @@ class _AddFoodPageState extends State<AddFoodPage> {
     );
   }
 
-  // ===============================
-  // 通用输入组件
-  // ===============================
   Widget _buildField(
     String label,
     TextEditingController controller, {

@@ -8,7 +8,7 @@ class FoodProvider extends ChangeNotifier {
   List<FoodLog> get list => _list;
 
   FoodProvider() {
-    loadFromDb(); // 启动时自动执行
+    loadFromDb(); 
   }
 
   Future<void> append(FoodLog foodLog) async {

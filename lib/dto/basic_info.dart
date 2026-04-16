@@ -32,7 +32,6 @@ class BasicInfo {
     );
   }
 
-  /// 转 Map（用于插入数据库）
   Map<String, dynamic> toMap() {
     return {
       'id': id,
