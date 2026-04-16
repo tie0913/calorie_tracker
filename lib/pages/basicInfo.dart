@@ -17,7 +17,6 @@ class BasicInfoPage extends StatefulWidget {
 }
 
 class _BasicInfoPageState extends State<BasicInfoPage> {
-
   bool _isEditMode = false;
   String _name = "Tie";
   int _age = 25;
@@ -127,73 +126,64 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool _initialize = false;
-    final basicInfo = context.watch<BasicInfoProvider>().info;
-    if (basicInfo == null) {
-      debugPrint('basicInfo is NULL');
-    } else {
-      debugPrint('basicInfo loaded:');
-      debugPrint('Name: ${basicInfo.name}');
-      debugPrint('Age: ${basicInfo.age}');
-      debugPrint('Height: ${basicInfo.height}');
-      debugPrint('Weight: ${basicInfo.weight}');
-      debugPrint('LogTime: ${basicInfo.logTime}');
-    }
-    if (basicInfo != null && !_initialize) {
-      _nameController.text = basicInfo.name;
-      _ageController.text = basicInfo.age?.toString() ?? '';
-      _heightController.text = basicInfo.height?.toString() ?? '';
-      _weightController.text = basicInfo.weight?.toString() ?? '';
-      bool _initialize = true;
-    }
+    return Consumer<BasicInfoProvider>(
+      builder: (BuildContext context, BasicInfoProvider value, Widget? child) {
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Basic Information"),
-        actions: [
-          IconButton(
-            icon: Icon(_isEditMode ? Icons.check : Icons.edit),
-            onPressed: _toggleEditMode,
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            WelcomeCard(),
-            const SizedBox(height: 24),
-            CardWrapper.wrap(
-              context,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildField("Name", _nameController),
-                  const SizedBox(height: 16),
-                  _buildField(
-                    "Age",
-                    _ageController,
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildUnitField(
-                    label: "Height",
-                    controller: _heightController,
-                    leftText: "cm",
-                  ),
-                  const SizedBox(height: 16),
-                  _buildUnitField(
-                    label: "Weight",
-                    controller: _weightController,
-                    leftText: "kg",
-                  ),
-                ],
+        final basicInfo = value.info;
+        _nameController.text = basicInfo?.name??"";
+        _ageController.text = basicInfo?.age?.toString()??"";
+        _heightController.text = basicInfo?.height?.toString()??"";
+        _weightController.text = basicInfo?.weight?.toString()??"";
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Basic Information"),
+            actions: [
+              IconButton(
+                icon: Icon(_isEditMode ? Icons.check : Icons.edit),
+                onPressed: _toggleEditMode,
               ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                WelcomeCard(),
+                const SizedBox(height: 24),
+                CardWrapper.wrap(
+                  context,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildField("Name", _nameController),
+                      const SizedBox(height: 16),
+                      _buildField(
+                        "Age",
+                        _ageController,
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 16),
+                      _buildUnitField(
+                        label: "Height",
+                        controller: _heightController,
+                        leftText: "cm",
+                      ),
+                      const SizedBox(height: 16),
+                      _buildUnitField(
+                        label: "Weight",
+                        controller: _weightController,
+                        leftText: "kg",
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 

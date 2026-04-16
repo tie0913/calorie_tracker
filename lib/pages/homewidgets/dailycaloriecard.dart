@@ -16,7 +16,7 @@ class _DailyCalorieCardState extends State<DailyCalorieCard> {
     return Consumer<FoodProvider>(
       builder: (BuildContext context, FoodProvider provider, Widget? child) {
         final list = provider.list;
-        final basicProvider = context.read<BasicInfoProvider>();
+        final basicProvider = context.watch<BasicInfoProvider>();
         final basic = basicProvider.info;
         int target = basic?.dailyCalorie?.toInt() ?? 0;
         int consumed = 0;

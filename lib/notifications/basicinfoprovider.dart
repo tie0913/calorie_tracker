@@ -19,14 +19,13 @@ class BasicInfoProvider extends ChangeNotifier {
   }
 
   Future<void> setBasicInfo(BasicInfo newInfo) async {
-    _info = newInfo;
-    _hasUserSetInfo = true;
-
     final db = DatabaseHelper.instance;
     await db.saveBasicInfo(newInfo);
-
+    final latest = await db.getLatestBasicInfo();
+    _info = BasicInfo.fromMap(latest!);
     _weightList.clear();
     _weightList.addAll(await db.getAllWeights());
+    _hasUserSetInfo = true;
     notifyListeners();
   }
 
